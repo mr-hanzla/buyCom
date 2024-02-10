@@ -31,7 +31,8 @@ async function getProductsOfCurrentPage() {
 }
 
 onMounted(async () => {
-    await productStore.dispatch('fetchProducts');
+    await getProductsOfCurrentPage();
+    // await productStore.dispatch('fetchProducts');
     await productStore.dispatch('fetchCategories');
 })
 
