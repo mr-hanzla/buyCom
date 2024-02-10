@@ -7,7 +7,14 @@ import store from './plugins/store'
 import productStore from './plugins/productStore'
 import vuetify from './plugins/vuetify';
 
+// import the package
+import VueAwesomePaginate from "vue-awesome-paginate";
+// import the necessary css file
+import "vue-awesome-paginate/dist/style.css";
+
 const app = createApp(App);
+
+app.use(VueAwesomePaginate);
 
 app.use(router);
 

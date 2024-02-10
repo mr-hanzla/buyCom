@@ -6,6 +6,7 @@ const productStore = createStore({
         return {
             products: [],
             isProductsDataFetched: false,
+            totalProducts: 0,
             categories: null,
             isCategoryDataFetched: false,
             categoryProducts: null,
@@ -20,11 +21,24 @@ const productStore = createStore({
                 if (!state.isProductsDataFetched) {
                     const response = await axios.get('https://dummyjson.com/products?limit=5000')
                     state.products = response.data.products;
+                    state.totalProducts = response.data.total;
                     state.isProductsDataFetched = true;
                     console.log('fetchProducts STORE is called and DONE');
                 }
                 console.log('fetchProducts STORE is called and but data already DONE');
             } catch (error) {
+                console.log('Error Getting Products' + error);
+                return error;
+            }
+        },
+        async fetchProductsWithLimit({ state }, {skip, limit}) {
+            try {
+                const response = await axios.get(`https://dummyjson.com/products?skip=${skip}&limit=${limit}`)
+                state.products = response.data.products;
+                state.totalProducts = response.data.total;
+                state.isProductsDataFetched = true;
+            } catch (error) {
+                state.isProductsDataFetched = false;
                 console.log('Error Getting Products' + error);
                 return error;
             }
