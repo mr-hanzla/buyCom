@@ -8,7 +8,8 @@ const productStore = createStore({
             isProductsDataFetched: false,
             categories: null,
             isCategoryDataFetched: false,
-            categoryProducts: null
+            categoryProducts: null,
+            cart: [],
         }
     },
     mutations: {
@@ -32,6 +33,7 @@ const productStore = createStore({
             try {
                 const response = await axios.get(`https://dummyjson.com/products/category/${category}`)
                 this.state.products = response.data.products;
+                state.isProductsDataFetched = true;
                 console.log('fetchProductsByCategory STORE is called and done');
             } catch (error) {
                 console.log('Error Getting Products' + error);
@@ -62,6 +64,14 @@ const productStore = createStore({
                 console.log('Error Getting Products' + error);
                 return error;
             }
+        },
+        addToCart({state}, product) {
+            state.cart.push(product);
+            console.log('Added to cart, Cart: ', state.cart);
+        },
+
+        removeFromCart({state}, id) {
+            state.cart = state.cart.filter(item => item.id !== id);
         }
     },
     getters: {

@@ -34,10 +34,6 @@ const store = createStore({
                 this.state.isAuthenticated = true;
             }
         },
-        tempFunction(context) {
-            console.log('CONTEXT: ', context);
-            this.state.count = 5343;
-        },
         saveState(context) {
             if (this.state.user) {
                 localStorage.setItem('current-user', JSON.stringify(this.state.user));
