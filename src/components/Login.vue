@@ -1,14 +1,17 @@
 <script setup>
 import axios from 'axios';
-import { ref, reactive, onMounted, onBeforeMount } from 'vue';
+import { ref, onMounted, onBeforeMount } from 'vue';
+import { useStore } from 'vuex';
 
 import { useRouter } from 'vue-router';
+
+// const store = inject('store');
+const store = useStore();
 
 const router = useRouter();
 
 const username = ref('');
 const password = ref('');
-const userData = ref('');
 const errorMessage = ref('');
 
 async function submitForm() {
@@ -18,14 +21,12 @@ async function submitForm() {
             password: password.value
         }
         const response = await axios.post('https://dummyjson.com/auth/login', credentials)
-        userData.value = response.data;
-        localStorage.setItem('current-user', JSON.stringify(userData.value));
-
+        store.dispatch('updateUser', response.data);
         router.push('/');
     } catch (error) {
         clearCredentials();
         errorMessage.value = 'Invalid Username or Password!';
-        return error;
+        console.log(error);
     }
 }
 
@@ -44,6 +45,9 @@ onBeforeMount(async () => {
 
 <template>
     <h1>Login View</h1>
+
+    <div style="width: 100%; border: 3px solid red;">
+    </div>
 
     <div>
         <form @submit.prevent="submitForm">
@@ -71,7 +75,6 @@ onBeforeMount(async () => {
 </template>
 
 <style>
-
 .error-message {
     align-content: center;
     border: 3px solid red;
