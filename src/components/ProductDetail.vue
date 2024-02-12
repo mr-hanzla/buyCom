@@ -23,6 +23,10 @@ const addToCart = () => {
     productStore.dispatch('addToCart', selectedProduct.value);
 }
 
+async function deleteProduct(id) {
+    await productStore.dispatch('deleteProduct', id);
+}
+
 onMounted(() => {
     console.log('Mounted!!!!!----------------')
 });
@@ -41,6 +45,7 @@ onMounted(() => {
             <p>Description: {{ selectedProduct.description }}</p>
             <h2>Price: ${{ selectedProduct.price }}</h2>
             <button @click="addToCart">Add to Cart</button>
+            <i @click="deleteProduct(selectedProduct.id)" class="material-icons" style="font-size:25px;color:red">delete</i>
         </div>
     </div>
 </template>
