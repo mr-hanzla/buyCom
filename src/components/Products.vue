@@ -30,6 +30,18 @@ async function getProductsOfCurrentPage() {
     await productStore.dispatch('fetchProductsWithLimit', {skip: skip, limit: limit.value});
 }
 
+const searchKeyword = ref('');
+
+async function searchByWord() {
+    console.log('Searched!');
+    console.log(searchKeyword.value);
+    await productStore.dispatch('fetchProductByKeyword', searchKeyword.value);
+}
+
+async function deleteProduct(id) {
+    await productStore.dispatch('deleteProduct', id);
+}
+
 onMounted(async () => {
     await getProductsOfCurrentPage();
     // await productStore.dispatch('fetchProducts');
@@ -43,6 +55,7 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+    <input type="text" v-model="searchKeyword"> <button @click="searchByWord">Search</button>
     <div class="product-list">
         <div class="product" v-for="product in productStore.state.products" :key="product.id"
             @click="gotoProductDetailPage(product.id)">
@@ -51,6 +64,8 @@ onBeforeMount(async () => {
             <h3><b><i>{{ product.title }}</i></b></h3>
             <p><b>Description:</b> {{ product.description }}</p>
             <p><b>Price:</b> ${{ product.price }}</p>
+            <i @click="editProduct(product.id)" class="material-icons" style="font-size:25px;color:blue">edit</i>
+            <i @click="deleteProduct(product.id)" class="material-icons" style="font-size:25px;color:red">delete</i>
             <!-- <p v-if="product.discountPercentage">Discounted Price: ${{ getDiscountedPrice(product.price,
                 product.discountPercentage) }} &lt;|&gtcc; ${{ product.price }}</p> -->
         </div>
