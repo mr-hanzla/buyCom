@@ -27,11 +27,42 @@ const productStore = createStore({
                 }
                 console.log('fetchProducts STORE is called and but data already DONE');
             } catch (error) {
+                state.isProductsDataFetched = false;
                 console.log('Error Getting Products' + error);
                 return error;
             }
         },
-        async fetchProductsWithLimit({ state }, {skip, limit}) {
+        async fetchProductByKeyword({ state }, keyword) {
+            try {
+                // if (!state.isProductsDataFetched) {
+                //     const response = await axios.get(`https://dummyjson.com/products/search?q=${keyword}`)
+                //     state.products = response.data.products;
+                //     state.totalProducts = response.data.total;
+                //     state.isProductsDataFetched = true;
+                //     console.log('fetchProducts STORE is called and DONE');
+                // }
+                const response = await axios.get(`https://dummyjson.com/products/search?q=${keyword}`)
+                state.products = response.data.products;
+                state.totalProducts = response.data.total;
+                state.isProductsDataFetched = true;
+                console.log('fetchProductsbyKEYWORD STORE is called and DONE');
+            } catch (error) {
+                state.isProductsDataFetched = false;
+                console.log('Error Getting Products' + error);
+                return error;
+            }
+        },
+        async deleteProduct({ state }, id) {
+            try {
+                const response = await axios.get(`https://dummyjson.com/products/${id}`)
+                console.log('Product is Deleted: ', response.data);
+                console.log('fetchProductsbyKEYWORD STORE is called and DONE');
+            } catch (error) {
+                console.log('Error Getting Products' + error);
+                return error;
+            }
+        },
+        async fetchProductsWithLimit({ state }, { skip, limit }) {
             try {
                 const response = await axios.get(`https://dummyjson.com/products?skip=${skip}&limit=${limit}`)
                 state.products = response.data.products;
@@ -50,6 +81,7 @@ const productStore = createStore({
                 state.isProductsDataFetched = true;
                 console.log('fetchProductsByCategory STORE is called and done');
             } catch (error) {
+                state.isProductsDataFetched = false;
                 console.log('Error Getting Products' + error);
                 return error;
             }
@@ -64,6 +96,7 @@ const productStore = createStore({
                 }
                 console.log('fetchCategory STORE is called BUT already done!');
             } catch (error) {
+                this.state.isCategoryDataFetched = false;
                 console.log('Error getting categories!' + error)
                 return error;
             }
@@ -79,12 +112,12 @@ const productStore = createStore({
                 return error;
             }
         },
-        addToCart({state}, product) {
+        addToCart({ state }, product) {
             state.cart.push(product);
             console.log('Added to cart, Cart: ', state.cart);
         },
 
-        removeFromCart({state}, id) {
+        removeFromCart({ state }, id) {
             state.cart = state.cart.filter(item => item.id !== id);
         }
     },
